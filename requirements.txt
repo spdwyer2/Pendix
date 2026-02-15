@@ -18,6 +18,10 @@ spacy>=3.7
 # Elasticsearch client
 elasticsearch>=8.12
 
+# Data exploration / test results
+pandas>=2.2
+tabulate>=0.9
+
 # Web framework (Task 2)
 # flask>=3.0
 # OR
