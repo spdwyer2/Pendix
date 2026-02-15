@@ -17,6 +17,8 @@ dependencies = [
     "openai-whisper>=20231117",
     "spacy>=3.7",
     "elasticsearch>=8.12",
+    "pandas>=2.2",
+    "tabulate>=0.9",
 ]
 
 [project.optional-dependencies]
