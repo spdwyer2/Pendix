@@ -1,0 +1,64 @@
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0,
+    "analysis": {
+      "analyzer": {
+        "transcript_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": ["lowercase", "asciifolding", "stop"]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "episode_title": {
+        "type": "text",
+        "analyzer": "transcript_analyzer",
+        "fields": {
+          "keyword": {
+            "type": "keyword"
+          }
+        }
+      },
+      "episode_date": {
+        "type": "date",
+        "format": "yyyy-MM-dd"
+      },
+      "audio_file": {
+        "type": "keyword"
+      },
+      "slug": {
+        "type": "keyword"
+      },
+      "description": {
+        "type": "text",
+        "analyzer": "transcript_analyzer"
+      },
+      "full_text": {
+        "type": "text",
+        "analyzer": "transcript_analyzer"
+      },
+      "segments": {
+        "type": "nested",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "start": {
+            "type": "float"
+          },
+          "end": {
+            "type": "float"
+          },
+          "text": {
+            "type": "text",
+            "analyzer": "transcript_analyzer"
+          }
+        }
+      }
+    }
+  }
+}

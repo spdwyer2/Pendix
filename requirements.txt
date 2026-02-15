@@ -1,0 +1,25 @@
+# Pendix — Python Dependencies
+
+# RSS feed parsing
+feedparser>=6.0
+
+# HTTP requests
+requests>=2.31
+
+# Progress bars
+tqdm>=4.66
+
+# Whisper transcription (local, open-source)
+openai-whisper>=20231117
+
+# NLP / Named Entity Recognition
+spacy>=3.7
+
+# Elasticsearch client
+elasticsearch>=8.12
+
+# Web framework (Task 2)
+# flask>=3.0
+# OR
+# fastapi>=0.109
+# uvicorn>=0.27

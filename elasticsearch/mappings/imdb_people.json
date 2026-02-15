@@ -1,0 +1,56 @@
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0
+  },
+  "mappings": {
+    "properties": {
+      "nconst": {
+        "type": "keyword"
+      },
+      "name": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword"
+          }
+        }
+      },
+      "birth_year": {
+        "type": "keyword"
+      },
+      "professions": {
+        "type": "keyword"
+      },
+      "category": {
+        "type": "keyword"
+      },
+      "known_for_titles": {
+        "type": "keyword"
+      },
+      "episode_mentions": {
+        "type": "nested",
+        "properties": {
+          "episode_title": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword"
+              }
+            }
+          },
+          "episode_date": {
+            "type": "date",
+            "format": "yyyy-MM-dd"
+          },
+          "mention_count": {
+            "type": "integer"
+          }
+        }
+      },
+      "total_mentions": {
+        "type": "integer"
+      }
+    }
+  }
+}

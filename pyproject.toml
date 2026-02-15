@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "pendix"
+version = "0.1.0"
+description = "Movie podcast analytics — statistics about directors, actors, and cinematographers mentioned on podcasts"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+
+dependencies = [
+    "feedparser>=6.0",
+    "requests>=2.31",
+    "tqdm>=4.66",
+    "openai-whisper>=20231117",
+    "spacy>=3.7",
+    "elasticsearch>=8.12",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.2",
+    "mypy>=1.8",
+    "pytest>=8.0",
+]
