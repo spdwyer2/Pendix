@@ -10,6 +10,7 @@ import json
 import logging
 import sys
 from pathlib import Path
+from typing import Any, Optional
 
 import whisper
 from tqdm import tqdm
@@ -52,8 +53,8 @@ def find_audio_files(audio_dir: Path) -> list[Path]:
 
 def transcribe_audio(
     audio_path: Path,
-    model: whisper.Whisper,
-    episode_meta: dict | None = None,
+    model: Any,
+    episode_meta: Optional[dict] = None,
 ) -> dict:
     """Transcribe a single audio file using Whisper.
 
