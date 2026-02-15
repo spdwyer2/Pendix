@@ -24,7 +24,7 @@ DEFAULT_EPISODE_LIMIT = 2
 DEFAULT_WHISPER_MODEL = "medium"
 
 # ── IMDB Dataset ──────────────────────────────────────────────────────────────
-IMDB_BASE_URL = "https://datasets.imdb.com/"
+IMDB_BASE_URL = "https://datasets.imdbws.com/"
 IMDB_FILES = [
     "name.basics.tsv.gz",
     "title.basics.tsv.gz",

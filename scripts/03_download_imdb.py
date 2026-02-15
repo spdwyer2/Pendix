@@ -67,7 +67,8 @@ def download_file(url: str, output_path: Path, overwrite: bool = False) -> Path:
         return output_path
 
     logger.info("Downloading: %s", url)
-    response = requests.get(url, stream=True, timeout=120)
+    headers = {"User-Agent": "Pendix/0.1 (podcast-analytics; non-commercial research)"}
+    response = requests.get(url, stream=True, timeout=120, headers=headers)
     response.raise_for_status()
 
     total_size = int(response.headers.get("content-length", 0))
