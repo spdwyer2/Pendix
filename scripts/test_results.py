@@ -22,11 +22,12 @@ import config
 logger = logging.getLogger(__name__)
 
 
-def get_es_client(url: str) -> Elasticsearch:
+def get_es_client(url: str, api_key: str = "") -> Elasticsearch:
     """Create and verify an Elasticsearch connection.
 
     Args:
         url: Elasticsearch URL.
+        api_key: Optional base64-encoded API key for Elastic Cloud.
 
     Returns:
         Connected Elasticsearch client.
@@ -36,14 +37,17 @@ def get_es_client(url: str) -> Elasticsearch:
             don't exist.
     """
     try:
-        es = Elasticsearch(url)
+        kwargs: dict = {"hosts": [url]}
+        if api_key:
+            kwargs["api_key"] = api_key
+        es = Elasticsearch(**kwargs)
         if not es.ping():
             raise ConnectionError
     except Exception:
         logger.error(
             "Cannot connect to Elasticsearch at %s.\n"
-            "  1. Start Elasticsearch:  cd elasticsearch && docker compose up -d\n"
-            "  2. Index data:           python scripts/05_index_elasticsearch.py",
+            "  1. Set ELASTICSEARCH_URL and ES_API_KEY env vars (for Elastic Cloud), or\n"
+            "  2. Start local Elasticsearch and run: python scripts/05_index_elasticsearch.py",
             url,
         )
         sys.exit(1)
@@ -450,7 +454,7 @@ def main() -> None:
         datefmt=config.LOG_DATE_FORMAT,
     )
 
-    es = get_es_client(args.es_url)
+    es = get_es_client(args.es_url, api_key=config.ES_API_KEY)
 
     episodes = fetch_episodes(es, args.episodes)
     if not episodes:

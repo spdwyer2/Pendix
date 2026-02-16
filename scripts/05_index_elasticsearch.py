@@ -25,16 +25,20 @@ logger = logging.getLogger(__name__)
 MAPPINGS_DIR = config.PROJECT_ROOT / "elasticsearch" / "mappings"
 
 
-def get_es_client(url: str) -> Elasticsearch:
+def get_es_client(url: str, api_key: str = "") -> Elasticsearch:
     """Create and verify an Elasticsearch client connection.
 
     Args:
         url: Elasticsearch URL.
+        api_key: Optional base64-encoded API key for Elastic Cloud.
 
     Returns:
         Connected Elasticsearch client.
     """
-    es = Elasticsearch(url)
+    kwargs: dict = {"hosts": [url]}
+    if api_key:
+        kwargs["api_key"] = api_key
+    es = Elasticsearch(**kwargs)
     if not es.ping():
         raise ConnectionError(f"Cannot connect to Elasticsearch at {url}")
     logger.info("Connected to Elasticsearch at %s", url)
@@ -223,7 +227,7 @@ def main() -> None:
         datefmt=config.LOG_DATE_FORMAT,
     )
 
-    es = get_es_client(args.es_url)
+    es = get_es_client(args.es_url, api_key=config.ES_API_KEY)
 
     if args.index in ("episodes", "all"):
         create_index(es, config.ES_INDEX_EPISODES, MAPPINGS_DIR / "episodes.json")
