@@ -1,5 +1,6 @@
 """Central configuration for the Pendix data pipeline."""
 
+import os
 from pathlib import Path
 
 # ── Project Root ──────────────────────────────────────────────────────────────
@@ -33,7 +34,11 @@ IMDB_FILES = [
 ]
 
 # ── Elasticsearch ─────────────────────────────────────────────────────────────
-ELASTICSEARCH_URL = "http://localhost:9200"
+# Supports both local ES and Elastic Cloud.  Set these env vars for cloud:
+#   ELASTICSEARCH_URL  — e.g. https://my-deploy.es.us-east-1.aws.elastic.cloud:443
+#   ES_API_KEY         — Base64-encoded API key from Elastic Cloud
+ELASTICSEARCH_URL = os.environ.get("ELASTICSEARCH_URL", "http://localhost:9200")
+ES_API_KEY = os.environ.get("ES_API_KEY", "")
 ES_INDEX_EPISODES = "pendix_episodes"
 ES_INDEX_PEOPLE = "pendix_people"
 ES_INDEX_MENTIONS = "pendix_mentions"
