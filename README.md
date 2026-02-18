@@ -108,6 +108,85 @@ python scripts/run_pipeline.py --step entities
 python scripts/run_pipeline.py --step download -- --num-episodes 5
 ```
 
+## Speaker Diarization & Identification
+
+Pendix can identify **who is speaking** each line of a transcript using [pyannote.audio](https://github.com/pyannote/pyannote-audio) for speaker diarization and a voice embedding library for recognizing recurring hosts across episodes.
+
+### Prerequisites
+
+1. Get a [HuggingFace token](https://huggingface.co/settings/tokens)
+2. Accept the model terms at [pyannote/speaker-diarization-3.1](https://huggingface.co/pyannote/speaker-diarization-3.1) and [pyannote/embedding](https://huggingface.co/pyannote/embedding)
+3. Set the environment variable:
+   ```bash
+   export HF_AUTH_TOKEN=hf_your_token_here
+   ```
+
+### First episode (bootstrap)
+
+```bash
+# 1. Transcribe with diarization — generates transcripts + speaker maps
+python scripts/02_transcribe.py --diarize
+
+# 2. Check the speaker map — it shows sample utterances per speaker
+#    so you can tell who is who
+cat data/speaker_maps/heat-1995.json
+```
+
+The speaker map looks like this:
+
+```json
+{
+  "speakers": {
+    "SPEAKER_00": {
+      "name": "",
+      "total_speaking_time_seconds": 1842.3,
+      "sample_utterances": [
+        "Welcome back to The Rewatchables...",
+        "I think what makes this movie so rewatchable..."
+      ],
+      "embedding": [0.12, -0.34, "..."]
+    },
+    "SPEAKER_01": { "..." : "..." }
+  },
+  "description": "Bill Simmons, Chris Ryan, and Sean Fennessey..."
+}
+```
+
+```bash
+# 3. Edit the speaker map — fill in the "name" field for each speaker
+#    (the episode description and sample utterances help you identify them)
+
+# 4. Confirm it — saves voice embeddings to the library
+python scripts/manage_speakers.py confirm heat-1995
+
+# 5. Apply names back into the transcript JSON
+python scripts/manage_speakers.py apply
+```
+
+### Future episodes (auto-matched)
+
+Once voices are in the library, they're recognized automatically:
+
+```bash
+python scripts/02_transcribe.py --diarize --file new-episode.mp3
+# → "Auto-matched SPEAKER_00 → Bill Simmons (similarity: 0.891)"
+```
+
+The voice library improves with each confirmed episode (embeddings are averaged over time).
+
+### Speaker management commands
+
+```bash
+# List all known voices in the library
+python scripts/manage_speakers.py list
+
+# Show which speaker maps are confirmed vs pending
+python scripts/manage_speakers.py status
+
+# Apply names even from unconfirmed maps
+python scripts/manage_speakers.py apply --include-unconfirmed
+```
+
 ## Project Structure
 
 ```
@@ -118,17 +197,20 @@ Pendix/
 │
 ├── scripts/
 │   ├── 01_download_episodes.py   # Download podcast audio from RSS
-│   ├── 02_transcribe.py          # Transcribe audio with Whisper
+│   ├── 02_transcribe.py          # Transcribe audio with Whisper + diarization
 │   ├── 03_download_imdb.py       # Download IMDB public datasets
 │   ├── 04_extract_entities.py    # Extract directors/actors/cinematographers
 │   ├── 05_index_elasticsearch.py # Index into Elasticsearch
+│   ├── manage_speakers.py        # Confirm speaker maps & manage voice library
 │   └── run_pipeline.py           # Orchestrate all steps
 │
 ├── data/                         # .gitignored — local data storage
 │   ├── audio/                    # Downloaded podcast audio files
 │   ├── transcripts/              # JSON transcripts with timestamps
 │   ├── imdb/                     # IMDB TSV dataset files
-│   └── entities/                 # Extracted entity JSON files
+│   ├── entities/                 # Extracted entity JSON files
+│   ├── speaker_maps/             # Per-episode speaker mapping templates
+│   └── speaker_library.json      # Known voice embeddings
 │
 ├── elasticsearch/
 │   ├── mappings/
