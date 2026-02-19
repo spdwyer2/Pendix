@@ -24,6 +24,18 @@ DEFAULT_EPISODE_LIMIT = 2
 # "medium" is recommended for M4 Pro (good speed/accuracy balance)
 DEFAULT_WHISPER_MODEL = "medium"
 
+# ── Speaker Diarization (pyannote.audio) ─────────────────────────────────────
+# Required when using --diarize flag.  Get a token at https://huggingface.co/settings/tokens
+# and accept the model terms at https://huggingface.co/pyannote/speaker-diarization-3.1
+HF_AUTH_TOKEN = os.environ.get("HF_AUTH_TOKEN", "")
+DEFAULT_DIARIZATION_MODEL = "pyannote/speaker-diarization-3.1"
+DEFAULT_EMBEDDING_MODEL = "pyannote/embedding"
+
+# ── Speaker Identification ───────────────────────────────────────────────────
+SPEAKER_MAPS_DIR = DATA_DIR / "speaker_maps"
+SPEAKER_LIBRARY_PATH = DATA_DIR / "speaker_library.json"
+SPEAKER_MATCH_THRESHOLD = 0.65  # cosine similarity threshold for auto-matching
+
 # ── IMDB Dataset ──────────────────────────────────────────────────────────────
 IMDB_BASE_URL = "https://datasets.imdbws.com/"
 IMDB_FILES = [

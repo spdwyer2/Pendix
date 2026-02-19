@@ -56,8 +56,14 @@
           "text": {
             "type": "text",
             "analyzer": "transcript_analyzer"
+          },
+          "speaker": {
+            "type": "keyword"
           }
         }
+      },
+      "diarized": {
+        "type": "boolean"
       }
     }
   }

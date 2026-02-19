@@ -12,6 +12,9 @@ tqdm>=4.66
 # Whisper transcription (local, open-source)
 openai-whisper>=20231117
 
+# Speaker diarization (optional, used with --diarize flag)
+pyannote.audio>=3.1
+
 # NLP / Named Entity Recognition
 spacy>=3.7
 
